@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { db } from '@/db'
 import type { LibraryItem, LibrarySort, LibraryTab, MasteryLevel } from '@/types/library'
 import { formatDate, endOfDay } from '@/utils/date'
-import { calcDueForBox } from '@/modules/srs/schedule'
+import { calcDueForBox, nextBox, type ReviewGrade } from '@/modules/srs/schedule'
+import { bumpDailyStat } from '@/modules/stats/daily'
 
 export const useLibraryStore = defineStore('library', {
   state: () => ({
@@ -58,6 +59,13 @@ export const useLibraryStore = defineStore('library', {
       return s.items.filter((i) => !i.isRemoved && i.dueDate > 0 && i.dueDate <= d).length
     },
     removedCount: (s) => s.items.filter((i) => i.isRemoved === 1).length,
+    /** 今日复习队列：未移除且到期的成语，按到期时间升序 */
+    reviewQueue(state): LibraryItem[] {
+      const deadline = endOfDay(Date.now())
+      return state.items
+        .filter((i) => !i.isRemoved && i.dueDate > 0 && i.dueDate <= deadline)
+        .sort((a, b) => a.dueDate - b.dueDate || b.addedAt - a.addedAt)
+    },
   },
   actions: {
     async ensureLoaded() {
@@ -70,6 +78,7 @@ export const useLibraryStore = defineStore('library', {
     async recordView(word: string, meta: { pinyin?: string; abbreviation?: string }) {
       await this.ensureLoaded()
       const now = Date.now()
+      const date = formatDate(now)
       const existing = await db.library.get(word)
       if (existing) {
         await db.library.update(word, {
@@ -77,6 +86,7 @@ export const useLibraryStore = defineStore('library', {
           lastViewedAt: now,
           updatedAt: now,
         })
+        await bumpDailyStat(date, { views: 1 })
       } else {
         const item: LibraryItem = {
           word,
@@ -95,9 +105,9 @@ export const useLibraryStore = defineStore('library', {
           lastReviewedAt: 0,
         }
         await db.library.add(item)
+        await bumpDailyStat(date, { views: 1, newCount: 1 })
       }
       // 记录查看事件
-      const date = formatDate(now)
       await db.events.add({ ts: now, date, word, type: 'view', outcome: '', durationSec: undefined })
       await this.loadItems()
     },
@@ -117,10 +127,44 @@ export const useLibraryStore = defineStore('library', {
       const item = await db.library.get(word)
       if (!item) return
       const now = Date.now()
-      await db.library.update(word, { mastery, updatedAt: now })
       const date = formatDate(now)
+      await db.library.update(word, { mastery, updatedAt: now })
       await db.events.add({ ts: now, date, word, type: 'mastery', outcome: mastery >= 3 ? 'ok' : '', durationSec: undefined })
       await this.loadItems()
+      await this.snapshotMastered(date)
+    },
+
+    /** 记录今日「已掌握」快照（累计值，供增长折线） */
+    async snapshotMastered(date: string) {
+      const count = this.items.filter((i) => !i.isRemoved && i.mastery >= 3).length
+      const row = await db.dailyStats.get(date)
+      await db.dailyStats.put({
+        date,
+        studySeconds: row?.studySeconds ?? 0,
+        reviews: row?.reviews ?? 0,
+        views: row?.views ?? 0,
+        newCount: row?.newCount ?? 0,
+        masteredCount: count,
+      })
+    },
+
+    /** 复习评级：记得/模糊/忘记 → 更新 SRS 盒子与到期时间，记录事件 */
+    async gradeReview(word: string, grade: ReviewGrade) {
+      const item = await db.library.get(word)
+      if (!item) return
+      const now = Date.now()
+      const date = formatDate(now)
+      const nb = nextBox(item.box, grade)
+      await db.library.update(word, {
+        box: nb,
+        dueDate: calcDueForBox(nb, now),
+        lastReviewedAt: now,
+        updatedAt: now,
+      })
+      await db.events.add({ ts: now, date, word, type: 'review', outcome: grade, durationSec: undefined })
+      await bumpDailyStat(date, { reviews: 1 })
+      await this.loadItems()
+      await this.snapshotMastered(date)
     },
 
     async setNote(word: string, note: string) {

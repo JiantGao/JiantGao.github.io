@@ -8,8 +8,11 @@ import type { Idiom } from '@/types/idiom'
 import type { LibraryItem, MasteryLevel } from '@/types/library'
 import { MASTERY_LABELS } from '@/types/library'
 import MasteryPicker from '@/components/common/MasteryPicker.vue'
+import { useStudyTracking } from '@/modules/stats/tracker'
 
 defineOptions({ name: 'IdiomDetailView' })
+
+useStudyTracking('detail')
 
 const route = useRoute()
 const router = useRouter()
