@@ -51,7 +51,6 @@ export type IndexRecord = [string, string, string, number, number]
 export interface SearchResultItem {
   id: number
   word: string
-  pinyin: string
   pinyinPlain: string
   abbrev: string
   hot: number
