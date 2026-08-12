@@ -8,6 +8,14 @@ dist-ssr/
 dist-pages/
 *.local
 
+# Capacitor / Android 构建产物（源码 android/ 保留，构建输出忽略）
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/assets/public/
+android/local.properties
+android/capacitor-cordova-android-plugins/
+
 # logs
 logs/
 *.log

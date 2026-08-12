@@ -15,9 +15,13 @@
     "data:build": "tsx scripts/build-artifacts.mts",
     "data:verify": "tsx scripts/verify.mts",
     "data:all": "tsx scripts/run-all.mts",
-    "gen:icons": "tsx scripts/gen-icons.mts"
+    "gen:icons": "tsx scripts/gen-icons.mts",
+    "cap:sync": "cap sync android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
     "dexie": "^4.0.11",
     "pinia": "^3.0.2",
     "vant": "^4.9.20",
@@ -25,8 +29,8 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@vant/auto-import-resolver": "^1.2.1",
     "@types/node": "^22.10.0",
+    "@vant/auto-import-resolver": "^1.2.1",
     "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "tsx": "^4.19.3",
