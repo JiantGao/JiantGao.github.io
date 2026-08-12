@@ -13,7 +13,13 @@
       "Bash(/usr/bin/grep -n \"数据管理\" /c/Users/86131/AppData/Local/Temp/e2e-probe/m5.mjs)",
       "Bash(/usr/bin/ls -la /e/成语开发/public/)",
       "Bash(/usr/bin/ls /e/成语开发/dist/icons/)",
-      "Bash(/usr/bin/head -6)"
+      "Bash(/usr/bin/head -6)",
+      "Bash(/usr/bin/grep -o 'chengyu-app[^\"\\\\\\\\]*' dist-pages/sw.js)",
+      "Bash(/usr/bin/head -10)",
+      "Bash(/usr/bin/grep -c 'chengyu-app' dist-pages/sw.js)",
+      "Bash(/usr/bin/grep -o 'precacheAndRoute[^]]*]' dist-pages/sw.js)",
+      "Bash(/usr/bin/head -c 600)",
+      "Bash(/usr/bin/head -c 400 dist-pages/sw.js)"
     ]
   }
 }
