@@ -16,45 +16,25 @@ const dict = useDictStore()
 
 useStudyTracking('review')
 
-onMounted(() => {
-  void loadQueue()
-})
-
-type Mode = 'due' | 'random'
-const mode = ref<Mode>('due')
-const queue = ref<LibraryItem[]>([])
-const idx = ref(0)
+/** 抽卡牌堆（全部已收录成语洗牌） */
+const deck = ref<LibraryItem[]>([])
+const pos = ref(0)
+const reviewedCount = ref(0)
 const flipped = ref(false)
 const feedback = ref<ReviewGrade | null>(null)
-const finished = ref(false)
-const tally = ref({ ok: 0, miss: 0, again: 0, skip: 0 })
+const showSummary = ref(false)
+const tally = ref({ ok: 0, miss: 0, again: 0 })
 
-const current = computed(() => queue.value[idx.value])
+const current = computed(() => deck.value[pos.value])
 const detail = ref<Idiom | null>(null)
 const detailLoading = ref(false)
-const progress = computed(() => {
-  const total = queue.value.length
-  if (!total) return 0
-  return Math.round(((finished.value ? total : idx.value) / total) * 100)
-})
+const hasPool = computed(() => library.reviewPool.length > 0)
 
 const GRADE_LABEL: Record<ReviewGrade, string> = { ok: '记得', miss: '模糊', again: '忘记' }
 
-async function loadQueue() {
-  await library.ensureLoaded()
-  if (mode.value === 'due') {
-    queue.value = library.reviewQueue
-  } else {
-    const pool = library.items.filter((i) => !i.isRemoved)
-    queue.value = shuffle(pool).slice(0, 10)
-  }
-  idx.value = 0
-  flipped.value = false
-  finished.value = false
-  tally.value = { ok: 0, miss: 0, again: 0, skip: 0 }
-  feedback.value = null
-  await loadDetail()
-}
+onMounted(() => {
+  void startReview()
+})
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -63,6 +43,23 @@ function shuffle<T>(arr: T[]): T[] {
     ;[a[i], a[j]] = [a[j], a[i]]
   }
   return a
+}
+
+async function startReview() {
+  await library.ensureLoaded()
+  showSummary.value = false
+  reviewedCount.value = 0
+  tally.value = { ok: 0, miss: 0, again: 0 }
+  flipped.value = false
+  feedback.value = null
+  refillDeck()
+  await loadDetail()
+}
+
+/** 洗牌补牌：牌堆抽空后无缝续抽，支持一直复习 */
+function refillDeck() {
+  deck.value = shuffle(library.reviewPool)
+  pos.value = 0
 }
 
 async function loadDetail() {
@@ -77,10 +74,10 @@ async function loadDetail() {
   }
 }
 
-async function flip() {
+function flip() {
   if (!flipped.value) {
     flipped.value = true
-    if (!detail.value && !detailLoading.value) await loadDetail()
+    if (!detail.value && !detailLoading.value) void loadDetail()
   }
 }
 
@@ -89,63 +86,55 @@ async function grade(g: ReviewGrade) {
   if (!c) return
   await library.gradeReview(c.word, g)
   tally.value[g]++
+  reviewedCount.value++
   feedback.value = g
-  await nextCard()
+  await advance()
 }
 
 async function skip() {
-  tally.value.skip++
-  await nextCard()
+  await advance()
 }
 
-async function nextCard() {
-  if (idx.value + 1 >= queue.value.length) {
-    finished.value = true
-    return
+async function advance() {
+  if (pos.value + 1 >= deck.value.length) {
+    refillDeck() // 一轮抽完，重新洗牌继续
+  } else {
+    pos.value++
   }
-  idx.value++
   flipped.value = false
   feedback.value = null
   await loadDetail()
 }
 
-function changeMode(m: Mode) {
-  mode.value = m
-  void loadQueue()
+function endSession() {
+  showSummary.value = true
 }
 </script>
 
 <template>
   <div class="review">
     <header class="review__head">
-      <span class="review__title">复习</span>
-      <span class="review__sub">间隔记忆 · 温故知新</span>
+      <div class="review__head-left">
+        <span class="review__title">复习</span>
+        <span class="review__sub">随机抽取全部已收录成语</span>
+      </div>
+      <span v-if="hasPool && !showSummary" class="review__counter">已复习 {{ reviewedCount }} 个</span>
     </header>
 
     <div class="review__body">
       <!-- 空状态 -->
       <van-empty
-        v-if="!queue.length && !finished"
-        :description="mode === 'due' ? '今天没有到期的成语，保持好节奏！' : '学习库还没有成语'"
-      >
-        <van-button
-          v-if="mode === 'due' && library.items.filter((i) => !i.isRemoved).length"
-          round
-          type="primary"
-          size="small"
-          @click="changeMode('random')"
-        >
-          随机温习 10 条
-        </van-button>
-      </van-empty>
+        v-if="!hasPool"
+        description="学习库还是空的，先搜索几个成语再回来复习吧"
+      />
 
-      <!-- 完成态 -->
-      <div v-else-if="finished" class="review__done">
+      <!-- 本轮总结 -->
+      <div v-else-if="showSummary" class="review__done">
         <div class="done-icon">🎉</div>
-        <div class="done-title">本轮完成！</div>
+        <div class="done-title">本轮复习完成</div>
         <div class="done-stats">
           <div class="done-stat">
-            <span class="done-stat__num">{{ queue.length }}</span>
+            <span class="done-stat__num">{{ reviewedCount }}</span>
             <span class="done-stat__label">复习总数</span>
           </div>
           <div class="done-stat done-stat--ok">
@@ -162,30 +151,13 @@ function changeMode(m: Mode) {
           </div>
         </div>
         <div class="done-actions">
-          <van-button round plain type="primary" @click="changeMode(mode)">再来一轮</van-button>
+          <van-button round type="primary" @click="startReview">继续复习</van-button>
           <van-button round plain type="default" @click="router.push({ name: 'library' })">回学习库</van-button>
         </div>
       </div>
 
       <!-- 闪卡 -->
-      <template v-else>
-        <div class="review__head">
-          <span class="review__mode">
-            <span
-              class="mode-chip"
-              :class="{ active: mode === 'due' }"
-              @click="changeMode('due')"
-            >今日到期</span>
-            <span
-              class="mode-chip"
-              :class="{ active: mode === 'random' }"
-              @click="changeMode('random')"
-            >随机温习</span>
-          </span>
-          <span class="review__counter">{{ idx + 1 }} / {{ queue.length }}</span>
-        </div>
-        <van-progress :percentage="progress" :show-pivot="false" color="#c62828" :stroke-width="4" />
-
+      <template v-else-if="current">
         <div
           class="card"
           :class="{ 'is-flipped': flipped, 'feed-ok': feedback === 'ok', 'feed-miss': feedback === 'miss', 'feed-again': feedback === 'again' }"
@@ -193,11 +165,9 @@ function changeMode(m: Mode) {
         >
           <!-- 正面 -->
           <div class="card__face card__front">
-            <template v-if="current">
-              <div class="card__word">{{ current.word }}</div>
-              <div class="card__pinyin">{{ current.pinyin }}</div>
-              <div class="card__hint">点击卡片查看释义</div>
-            </template>
+            <div class="card__word">{{ current.word }}</div>
+            <div class="card__pinyin">{{ current.pinyin }}</div>
+            <div class="card__hint">点击卡片查看释义</div>
           </div>
           <!-- 反面 -->
           <div class="card__face card__back">
@@ -216,7 +186,7 @@ function changeMode(m: Mode) {
 
         <transition name="fade">
           <div v-if="feedback" class="feed-msg" :class="`feed-msg--${feedback}`">
-            {{ GRADE_LABEL[feedback] }} · 已更新复习计划
+            {{ GRADE_LABEL[feedback] }} · 已记录
           </div>
         </transition>
 
@@ -225,7 +195,10 @@ function changeMode(m: Mode) {
           <button class="grade-btn grade-btn--miss" :disabled="!flipped" @click="grade('miss')">模糊</button>
           <button class="grade-btn grade-btn--ok" :disabled="!flipped" @click="grade('ok')">记得</button>
         </div>
-        <div class="review__skip" v-if="flipped" @click="skip">跳过此条</div>
+        <div class="review__foot">
+          <span v-if="flipped" class="review__skip" @click="skip">跳过此条</span>
+          <span class="review__end" @click="endSession">结束本轮</span>
+        </div>
       </template>
     </div>
   </div>
@@ -240,9 +213,15 @@ function changeMode(m: Mode) {
 
 .review__head {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 6px;
+}
+
+.review__head-left {
+  display: flex;
   align-items: baseline;
   gap: 10px;
-  padding: 18px 20px 6px;
 }
 
 .review__title {
@@ -255,50 +234,24 @@ function changeMode(m: Mode) {
   color: var(--cy-text-tertiary);
 }
 
-.review__body {
-  flex: 1;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.review__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.review__mode {
-  display: flex;
-  gap: 8px;
-}
-
-.mode-chip {
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: var(--cy-card);
-  color: var(--cy-text-secondary);
-  font-size: var(--cy-font-sm);
-  box-shadow: var(--cy-shadow-sm);
-  cursor: pointer;
-}
-.mode-chip.active {
-  background: var(--cy-primary);
-  color: #fff;
-}
-
 .review__counter {
   font-size: var(--cy-font-sm);
-  color: var(--cy-text-tertiary);
+  color: var(--cy-text-secondary);
+}
+
+.review__body {
+  flex: 1;
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 卡片 */
 .card {
   position: relative;
   flex: 1;
-  margin: 16px 0;
-  min-height: 320px;
+  margin: 14px 0;
+  min-height: 300px;
   perspective: 1000px;
 }
 
@@ -435,16 +388,30 @@ function changeMode(m: Mode) {
   opacity: 1;
 }
 
-.review__skip {
-  text-align: center;
+.review__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 14px;
+}
+
+.review__skip {
   font-size: var(--cy-font-sm);
   color: var(--cy-text-tertiary);
   text-decoration: underline;
   cursor: pointer;
 }
 
-/* 完成态 */
+.review__end {
+  font-size: var(--cy-font-sm);
+  color: var(--cy-text-secondary);
+  padding: 4px 10px;
+  border: 1px solid var(--cy-border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* 总结态 */
 .review__done {
   flex: 1;
   display: flex;

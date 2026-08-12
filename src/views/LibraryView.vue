@@ -22,14 +22,12 @@ const tabDefs: Array<{ key: LibraryTab; label: string; count: () => number }> = 
   { key: 'all', label: '全部', count: () => library.totalCount },
   { key: 'favorite', label: '收藏', count: () => library.favoriteCount },
   { key: 'mastered', label: '已掌握', count: () => library.masteredCount },
-  { key: 'todayDue', label: '今日到期', count: () => library.todayDueCount },
   { key: 'removed', label: '已移除', count: () => library.removedCount },
 ]
 
 const sortOptions: Array<{ key: LibrarySort; label: string }> = [
   { key: 'addedDesc', label: '最近搜索' },
   { key: 'masteryDesc', label: '掌握程度' },
-  { key: 'dueAsc', label: '到期时间' },
   { key: 'pinyinAsc', label: '拼音' },
 ]
 const sortActions = computed(() => sortOptions.map((o) => ({ name: o.label, key: o.key })))
@@ -137,11 +135,6 @@ async function onDeletePermanent(item: LibraryItem) {
     </van-tabs>
 
     <div class="library__body">
-      <div v-if="library.tab === 'todayDue' && library.todayDueCount > 0" class="due-cta">
-        <span>今日有 {{ library.todayDueCount }} 个成语到期</span>
-        <van-button size="small" round type="danger" @click="router.push({ name: 'review' })">开始复习</van-button>
-      </div>
-
       <template v-if="list.length">
         <van-swipe-cell v-for="item in list" :key="item.word">
           <div class="lib-item" @click="openDetail(item)">
@@ -161,7 +154,6 @@ async function onDeletePermanent(item: LibraryItem) {
               <span class="mastery-chip" :style="{ '--mc': `var(--cy-mastery-${item.mastery})` }">
                 {{ MASTERY_LABELS[item.mastery] }}
               </span>
-              <span v-if="item.dueDate > 0 && item.dueDate <= Date.now()" class="due-chip">到期</span>
             </div>
           </div>
 
@@ -257,18 +249,6 @@ async function onDeletePermanent(item: LibraryItem) {
   padding: 8px 12px 20px;
 }
 
-.due-cta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--cy-primary-soft);
-  border-radius: var(--cy-radius-md);
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  color: var(--cy-primary);
-  font-size: var(--cy-font-sm);
-}
-
 /* 列表项 */
 .lib-item {
   display: flex;
@@ -339,14 +319,6 @@ async function onDeletePermanent(item: LibraryItem) {
   border: 1px solid var(--mc, var(--cy-mastery-0));
   padding: 1px 8px;
   border-radius: 999px;
-}
-
-.due-chip {
-  font-size: 10px;
-  color: var(--cy-danger);
-  background: var(--cy-primary-soft);
-  padding: 1px 6px;
-  border-radius: 6px;
 }
 
 /* 滑动操作 */

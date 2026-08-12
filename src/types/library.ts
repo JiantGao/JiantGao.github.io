@@ -32,14 +32,10 @@ export interface LibraryItem {
 }
 
 /** 学习库筛选维度 */
-export type LibraryTab = 'all' | 'favorite' | 'mastered' | 'todayDue' | 'removed'
+export type LibraryTab = 'all' | 'favorite' | 'mastered' | 'removed'
 
 /** 学习库排序方式 */
-export type LibrarySort =
-  | 'addedDesc' // 最近搜索/加入
-  | 'masteryDesc' // 掌握程度
-  | 'dueAsc' // 到期时间
-  | 'pinyinAsc' // 拼音
+export type LibrarySort = 'addedDesc' | 'masteryDesc' | 'pinyinAsc'
 
 export const MASTERY_LABELS: Record<MasteryLevel, string> = {
   0: '未标记',

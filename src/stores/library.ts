@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { db } from '@/db'
 import type { LibraryItem, LibrarySort, LibraryTab, MasteryLevel } from '@/types/library'
-import { formatDate, endOfDay } from '@/utils/date'
+import { formatDate } from '@/utils/date'
 import { calcDueForBox, nextBox, type ReviewGrade } from '@/modules/srs/schedule'
 import { bumpDailyStat } from '@/modules/stats/daily'
 
@@ -14,8 +14,6 @@ export const useLibraryStore = defineStore('library', {
   }),
   getters: {
     visibleItems(state): LibraryItem[] {
-      const now = Date.now()
-      const dueDeadline = endOfDay(now)
       let list = state.items
       switch (state.tab) {
         case 'all':
@@ -26,9 +24,6 @@ export const useLibraryStore = defineStore('library', {
           break
         case 'mastered':
           list = list.filter((i) => !i.isRemoved && i.mastery >= 3)
-          break
-        case 'todayDue':
-          list = list.filter((i) => !i.isRemoved && i.dueDate > 0 && i.dueDate <= dueDeadline)
           break
         case 'removed':
           list = list.filter((i) => i.isRemoved === 1)
@@ -42,9 +37,6 @@ export const useLibraryStore = defineStore('library', {
         case 'masteryDesc':
           copy.sort((a, b) => b.mastery - a.mastery || b.addedAt - a.addedAt)
           break
-        case 'dueAsc':
-          copy.sort((a, b) => (a.dueDate || 0) - (b.dueDate || 0) || b.addedAt - a.addedAt)
-          break
         case 'pinyinAsc':
           copy.sort((a, b) => a.abbreviation.localeCompare(b.abbreviation) || b.addedAt - a.addedAt)
           break
@@ -54,17 +46,10 @@ export const useLibraryStore = defineStore('library', {
     totalCount: (s) => s.items.filter((i) => !i.isRemoved).length,
     masteredCount: (s) => s.items.filter((i) => !i.isRemoved && i.mastery >= 3).length,
     favoriteCount: (s) => s.items.filter((i) => !i.isRemoved && i.favorite === 1).length,
-    todayDueCount: (s) => {
-      const d = endOfDay(Date.now())
-      return s.items.filter((i) => !i.isRemoved && i.dueDate > 0 && i.dueDate <= d).length
-    },
     removedCount: (s) => s.items.filter((i) => i.isRemoved === 1).length,
-    /** 今日复习队列：未移除且到期的成语，按到期时间升序 */
-    reviewQueue(state): LibraryItem[] {
-      const deadline = endOfDay(Date.now())
-      return state.items
-        .filter((i) => !i.isRemoved && i.dueDate > 0 && i.dueDate <= deadline)
-        .sort((a, b) => a.dueDate - b.dueDate || b.addedAt - a.addedAt)
+    /** 复习抽样池：全部未移除的成语 */
+    reviewPool(state): LibraryItem[] {
+      return state.items.filter((i) => !i.isRemoved)
     },
   },
   actions: {
