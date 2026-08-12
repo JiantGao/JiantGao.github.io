@@ -117,7 +117,10 @@ function changeMode(m: Mode) {
 
 <template>
   <div class="review">
-    <van-nav-bar title="复习" left-arrow @click-left="router.back()" />
+    <header class="review__head">
+      <span class="review__title">复习</span>
+      <span class="review__sub">间隔记忆 · 温故知新</span>
+    </header>
 
     <div class="review__body">
       <!-- 空状态 -->
@@ -233,6 +236,23 @@ function changeMode(m: Mode) {
   min-height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.review__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 18px 20px 6px;
+}
+
+.review__title {
+  font-size: var(--cy-font-xl);
+  font-weight: 700;
+}
+
+.review__sub {
+  font-size: var(--cy-font-xs);
+  color: var(--cy-text-tertiary);
 }
 
 .review__body {

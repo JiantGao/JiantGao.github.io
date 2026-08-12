@@ -14,6 +14,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { title: '学习库', tabbar: true },
   },
   {
+    path: '/review',
+    name: 'review',
+    component: () => import('@/views/ReviewView.vue'),
+    meta: { title: '复习', tabbar: true },
+  },
+  {
     path: '/stats',
     name: 'stats',
     component: () => import('@/views/StatsView.vue'),
@@ -30,12 +36,6 @@ export const routes: RouteRecordRaw[] = [
     name: 'idiom-detail',
     component: () => import('@/views/IdiomDetailView.vue'),
     meta: { title: '成语详情', tabbar: false },
-  },
-  {
-    path: '/review',
-    name: 'review',
-    component: () => import('@/views/ReviewView.vue'),
-    meta: { title: '复习', tabbar: false },
   },
   {
     path: '/:pathMatch(.*)*',

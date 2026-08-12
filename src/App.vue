@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useLibraryStore } from '@/stores/library'
 
 const route = useRoute()
+const library = useLibraryStore()
 const showRefresh = ref(false)
+
+onMounted(() => {
+  void library.ensureLoaded()
+})
 
 window.addEventListener('sw-need-refresh', () => {
   showRefresh.value = true
@@ -39,6 +45,9 @@ const refreshNow = () => window.location.reload()
     >
       <van-tabbar-item to="/" icon="search" replace>首页</van-tabbar-item>
       <van-tabbar-item to="/library" icon="bookmark-o" replace>学习库</van-tabbar-item>
+      <van-tabbar-item to="/review" icon="completed" replace :badge="library.todayDueCount > 0 ? library.todayDueCount : ''">
+        复习
+      </van-tabbar-item>
       <van-tabbar-item to="/stats" icon="bar-chart-o" replace>统计</van-tabbar-item>
       <van-tabbar-item to="/settings" icon="setting-o" replace>设置</van-tabbar-item>
     </van-tabbar>
