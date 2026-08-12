@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onActivated, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { showConfirmDialog, showToast } from 'vant'
 import { useLibraryStore } from '@/stores/library'
@@ -40,6 +40,11 @@ const isRemovedTab = computed(() => library.tab === 'removed')
 
 onMounted(() => {
   void library.ensureLoaded()
+})
+
+onActivated(() => {
+  // 从设置页导入/重置返回时刷新
+  void library.loadItems()
 })
 
 function onTabChange(index: number) {

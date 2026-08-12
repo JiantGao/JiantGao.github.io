@@ -8,12 +8,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BarChart: typeof import('./components/stats/charts/BarChart.vue')['default']
+    DonutChart: typeof import('./components/stats/charts/DonutChart.vue')['default']
+    LineChart: typeof import('./components/stats/charts/LineChart.vue')['default']
     MasteryPicker: typeof import('./components/common/MasteryPicker.vue')['default']
     NoteEditor: typeof import('./components/common/NoteEditor.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StatCard: typeof import('./components/stats/StatCard.vue')['default']
     VanActionSheet: typeof import('vant/es')['ActionSheet']
     VanButton: typeof import('vant/es')['Button']
+    VanCell: typeof import('vant/es')['Cell']
+    VanCellGroup: typeof import('vant/es')['CellGroup']
     VanEmpty: typeof import('vant/es')['Empty']
     VanIcon: typeof import('vant/es')['Icon']
     VanNavBar: typeof import('vant/es')['NavBar']

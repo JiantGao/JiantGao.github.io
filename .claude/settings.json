@@ -7,7 +7,10 @@
       "Bash(/usr/bin/head -20)",
       "Bash(/usr/bin/grep -rn \"action-sheet__item\\\\|action-sheet__option\" /e/成语开发/node_modules/vant/es/action-sheet/)",
       "Bash(/usr/bin/head -5)",
-      "Bash(/usr/bin/sed -i 's#van-action-sheet__option#van-action-sheet__item#g' m3.mjs)"
+      "Bash(/usr/bin/sed -i 's#van-action-sheet__option#van-action-sheet__item#g' m3.mjs)",
+      "Bash(/usr/bin/sed -i \"s#\\\\.locator\\('.van-cell-group'\\).filter\\({ hasText: '数据管理' }\\).locator\\('.van-cell'\\).filter\\({ hasText: '#.locator\\('.van-cell'\\).filter\\({ hasText: '#g\" m5.mjs)",
+      "Bash(/usr/bin/grep -n \"van-cell'\\\\.filter\" m5.mjs)",
+      "Bash(/usr/bin/grep -n \"数据管理\" /c/Users/86131/AppData/Local/Temp/e2e-probe/m5.mjs)"
     ]
   }
 }
