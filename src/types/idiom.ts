@@ -44,8 +44,8 @@ export interface CuratedInfo {
   notes: string
 }
 
-/** 搜索索引的紧凑记录：[word, pinyinPlain, abbrev, id] */
-export type IndexRecord = [string, string, string, number]
+/** 搜索索引的紧凑记录：[word, pinyinPlain, abbrev, hot, id] */
+export type IndexRecord = [string, string, string, number, number]
 
 /** 搜索结果项 */
 export interface SearchResultItem {

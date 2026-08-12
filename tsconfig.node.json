@@ -9,8 +9,9 @@
     "noEmit": true,
     "types": ["node"],
     "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["vite.config.ts", "scripts/**/*.mts"]
+  "include": ["vite.config.ts", "scripts/**/*.ts", "scripts/**/*.mts"]
 }

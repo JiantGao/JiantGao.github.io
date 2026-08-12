@@ -23,5 +23,9 @@ pnpm-debug.log*
 .env
 .env.local
 
+# 数据中间产物（可重新下载/生成）
+data/source/
+data/normalized/
+
 # generated (rebuilt via `npm run data:all`; committed for reproducible builds)
 # src/data/generated/  — keep committed
