@@ -5,8 +5,11 @@ import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver'
 import { VitePWA } from 'vite-plugin-pwa'
 
+/** 部署子路径（如 GitHub Pages 的 /chengyu-app/），本地开发为 / */
+const base = process.env.BASE_PATH || '/'
+
 export default defineConfig({
-  base: '/',
+  base,
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -19,6 +22,7 @@ export default defineConfig({
       dts: 'src/components.d.ts',
     }),
     VitePWA({
+      base,
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
@@ -26,8 +30,8 @@ export default defineConfig({
         short_name: '成语',
         description: '离线可用的成语词典与个性化学习工具',
         lang: 'zh-CN',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         display: 'standalone',
         orientation: 'portrait',
         theme_color: '#ffffff',
