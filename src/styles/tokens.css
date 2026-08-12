@@ -1,0 +1,73 @@
+:root {
+  /* 主题色（朱砂红，契合汉字/印章意象） */
+  --cy-primary: #c62828;
+  --cy-primary-light: #ef5350;
+  --cy-primary-dark: #8e1c1c;
+  --cy-primary-soft: #fdecea;
+
+  /* 中性色 */
+  --cy-bg: #f7f7f5;
+  --cy-card: #ffffff;
+  --cy-text-primary: #1a1a1a;
+  --cy-text-secondary: #666666;
+  --cy-text-tertiary: #999999;
+  --cy-border: #ebebeb;
+  --cy-divider: #f2f2f2;
+
+  /* 语义色 */
+  --cy-success: #2e7d32;
+  --cy-warning: #ef6c00;
+  --cy-danger: #c62828;
+
+  /* 掌握程度档位色 */
+  --cy-mastery-0: #bdbdbd;
+  --cy-mastery-1: #90a4ae;
+  --cy-mastery-2: #5c9ce6;
+  --cy-mastery-3: #43a047;
+  --cy-mastery-4: #f9a825;
+
+  /* 间距与圆角 */
+  --cy-space-xs: 4px;
+  --cy-space-sm: 8px;
+  --cy-space-md: 16px;
+  --cy-space-lg: 24px;
+  --cy-radius-sm: 6px;
+  --cy-radius-md: 10px;
+  --cy-radius-lg: 16px;
+
+  /* 字号 */
+  --cy-font-xs: 12px;
+  --cy-font-sm: 13px;
+  --cy-font-md: 15px;
+  --cy-font-lg: 17px;
+  --cy-font-xl: 20px;
+
+  /* 阴影 */
+  --cy-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --cy-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  /* Vant 主题变量覆写 */
+  --van-primary-color: var(--cy-primary);
+  --van-danger-color: var(--cy-danger);
+  --van-success-color: var(--cy-success);
+  --van-warning-color: var(--cy-warning);
+  --van-border-color: var(--cy-border);
+  --van-background: var(--cy-bg);
+  --van-text-color: var(--cy-text-primary);
+  --van-text-color-2: var(--cy-text-secondary);
+  --van-text-color-3: var(--cy-text-tertiary);
+  --van-tabbar-item-active-color: var(--cy-primary);
+  --van-nav-bar-icon-color: var(--cy-text-primary);
+  --van-nav-bar-title-text-color: var(--cy-text-primary);
+}
+
+.page-body {
+  min-height: 100%;
+  padding: var(--cy-space-md);
+  padding-bottom: calc(60px + env(safe-area-inset-bottom));
+}
+
+.page-body--no-pad {
+  padding: 0;
+  padding-bottom: calc(50px + env(safe-area-inset-bottom));
+}

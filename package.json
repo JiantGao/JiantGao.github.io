@@ -1,0 +1,39 @@
+{
+  "name": "chengyu-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "成语学习移动应用（离线 PWA）：基于搜索行为构建个性化成语学习库",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && npm run data:all && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "data:fetch": "tsx scripts/fetch-source.mts",
+    "data:normalize": "tsx scripts/normalize.mts",
+    "data:curated": "tsx scripts/merge-curated.mts",
+    "data:build": "tsx scripts/build-artifacts.mts",
+    "data:verify": "tsx scripts/verify.mts",
+    "data:all": "tsx scripts/run-all.mts",
+    "gen:icons": "tsx scripts/gen-icons.mts"
+  },
+  "dependencies": {
+    "dexie": "^4.0.11",
+    "pinia": "^3.0.2",
+    "vant": "^4.9.20",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@vant/auto-import-resolver": "^1.2.1",
+    "@types/node": "^22.10.0",
+    "@vite-pwa/assets-generator": "^1.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "~5.7.2",
+    "unplugin-vue-components": "^28.0.0",
+    "vite": "^7.0.0",
+    "vite-plugin-pwa": "^1.0.0",
+    "vue-tsc": "^2.2.0"
+  }
+}
