@@ -1,0 +1,1 @@
+const t="data-1d4b4f45-30895",e=30895,o=4096,c=8,u=1,n="1d4b4f454ce1c416d6a1ab2369d6e66c0ff99e04390172eef70790499e21ce19",a=78,d={version:t,total:30895,chunkSize:4096,detailChunkCount:8,indexChunkCount:1,sourceSha256:n,curatedCount:78};export{o as chunkSize,a as curatedCount,d as default,c as detailChunkCount,u as indexChunkCount,n as sourceSha256,e as total,t as version};

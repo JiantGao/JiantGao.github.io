@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#c62828"/>
+  <rect x="96" y="96" width="320" height="320" rx="48" fill="none" stroke="#ffffff" stroke-width="24"/>
+  <text x="256" y="300" font-family="serif, 'Songti SC', 'Noto Serif CJK SC', 'SimSun'" font-size="220" font-weight="700" fill="#ffffff" text-anchor="middle">成</text>
+</svg>

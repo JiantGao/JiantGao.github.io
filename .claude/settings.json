@@ -19,7 +19,25 @@
       "Bash(/usr/bin/grep -c 'chengyu-app' dist-pages/sw.js)",
       "Bash(/usr/bin/grep -o 'precacheAndRoute[^]]*]' dist-pages/sw.js)",
       "Bash(/usr/bin/head -c 600)",
-      "Bash(/usr/bin/head -c 400 dist-pages/sw.js)"
+      "Bash(/usr/bin/head -c 400 dist-pages/sw.js)",
+      "Bash(/usr/bin/grep -rno \"serviceWorker\\\\.register[^;]*\" dist-pages/assets/*.js)",
+      "Bash(/usr/bin/head -3)",
+      "Bash(/usr/bin/grep -o \"register\\\\\\([^\\)]*\\\\\\)\" dist-pages/assets/*.js)",
+      "Bash(/usr/bin/grep -o \"sw.js[^\\)]*\")",
+      "Bash(/usr/bin/grep -o '\"navigateFallback\"[^,}]*\\\\|navigateFallback' dist-pages/sw.js)",
+      "Bash(/usr/bin/head -2)",
+      "Bash(/usr/bin/grep -o '{url:\"index.html\"[^}]*}' dist-pages/sw.js)",
+      "Bash(/usr/bin/grep -rno \"serviceWorker\\\\.register\\([^\\)]*\\)\" dist-pages/assets/)",
+      "Bash(/usr/bin/grep -rl \"sw.js\" dist-pages/assets/*.js)",
+      "Bash(/usr/bin/grep -o 'navigateFallbackDenylist[^]]*]\\\\|\"scope\"[^,}]*' dist-pages/sw.js)",
+      "Bash(/usr/bin/grep -o 'sw\\\\.js[^\"`]*\\\\|scope[^,}]*' dist-pages/assets/index-*.js)",
+      "Bash(/usr/bin/head -8)",
+      "Bash(/usr/bin/grep -o 'chengyu-app[^\"`]*' dist-pages/assets/index-*.js)",
+      "Bash(/usr/bin/grep -o '.\\\\{80\\\\}chengyu-app/sw\\\\.js.\\\\{80\\\\}' dist-pages/assets/index-*.js)",
+      "Bash(/usr/bin/grep -o 'registerSW[^;]\\\\{0,200\\\\}' dist-pages/assets/index-*.js)",
+      "Bash(/usr/bin/grep -o 'createHandlerBoundToURL\\([^\\)]*\\)\\\\|\"navigation\"[^}]*}\\\\|navigateFallback[^,]*' dist-pages/sw.js)",
+      "Bash(/usr/bin/grep -o 'registerRoute\\([^\\)]*navigation[^\\)]*\\)' dist-pages/sw.js)",
+      "Bash(/usr/bin/grep -o 'createHandlerBoundToURL\\([^\\)]*\\)\\\\|setCatchHandler\\([^\\)]*\\)\\\\|isNavigation\\\\|\"navigation\"[^}]*}' dist-pages/sw.js)"
     ]
   }
 }
