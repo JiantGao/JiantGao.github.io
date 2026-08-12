@@ -160,12 +160,28 @@ function runSizeReport(): void {
   console.log(`  ${'TOTAL'.padEnd(24)} ${formatBytes(totalRaw).padStart(10)}  gzip ${formatBytes(totalGz).padStart(10)}`)
 }
 
+function runBenchmark(index: IndexFile): void {
+  log('verify', '--- 性能基准（Node 环境参考） ---')
+  const buf = readFileSync(resolve(GENERATED_DIR, 'index.json'))
+  const t0 = performance.now()
+  JSON.parse(buf.toString())
+  const parseMs = performance.now() - t0
+  console.log(`  index.json 解析：${parseMs.toFixed(1)} ms`)
+
+  const t1 = performance.now()
+  const queries = ['守株待兔', 'szdt', 'shou zhu', '一', '卧薪尝胆', '叶公好龙', 'vbnm']
+  for (const q of queries) search(q, index, 20)
+  const total = performance.now() - t1
+  console.log(`  ${queries.length} 次搜索共 ${total.toFixed(1)} ms（平均 ${(total / queries.length).toFixed(2)} ms）`)
+}
+
 export function main(): void {
   const meta = readJson<Meta>(`${GENERATED_DIR}/meta.json`)
   log('verify', `构建版本：${meta.version}`)
   runStructureChecks(meta)
   runSmoke(loadIndex())
   runSizeReport()
+  runBenchmark(loadIndex())
 
   if (failures) {
     throw new Error(`共 ${failures} 项校验失败`)

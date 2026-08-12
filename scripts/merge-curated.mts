@@ -53,6 +53,10 @@ export function main(): void {
     }
     if (!item.examples?.length) violations.push(`${item.word}: examples 为空`)
     if (item.tier === 1 && item.examples.length < 3) violations.push(`${item.word}: tier1 例句数 < 3`)
+    const syn = item.synonyms ?? []
+    const ant = item.antonyms ?? []
+    if (syn.includes(item.word)) violations.push(`${item.word}: synonyms 含自身`)
+    if (ant.includes(item.word)) violations.push(`${item.word}: antonyms 含自身`)
     if (violations.length) continue
   }
 
