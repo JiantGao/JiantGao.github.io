@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/usr/bin/sed -i 's#\\\\.van-tabbar-item\\\\[to=\"/library\"\\\\]#.van-tabbar-item:has-text\\(\"学习库\"\\)#g' m3.mjs)",
+      "Bash(/usr/bin/grep -o \"van-action-sheet__[a-z]*\" /e/成语开发/node_modules/vant/es/action-sheet/ActionSheet.mjs)",
+      "Bash(/usr/bin/sort -u)",
+      "Bash(/usr/bin/head -20)",
+      "Bash(/usr/bin/grep -rn \"action-sheet__item\\\\|action-sheet__option\" /e/成语开发/node_modules/vant/es/action-sheet/)",
+      "Bash(/usr/bin/head -5)",
+      "Bash(/usr/bin/sed -i 's#van-action-sheet__option#van-action-sheet__item#g' m3.mjs)"
+    ]
+  }
+}

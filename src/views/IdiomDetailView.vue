@@ -7,6 +7,7 @@ import { useLibraryStore } from '@/stores/library'
 import type { Idiom } from '@/types/idiom'
 import type { LibraryItem, MasteryLevel } from '@/types/library'
 import { MASTERY_LABELS } from '@/types/library'
+import MasteryPicker from '@/components/common/MasteryPicker.vue'
 
 defineOptions({ name: 'IdiomDetailView' })
 
@@ -202,28 +203,12 @@ function gotoWord(w: string) {
     </div>
 
     <!-- 掌握程度选择 -->
-    <van-popup
-      v-model:show="masteryPickOpen"
-      position="bottom"
-      round
-      :style="{ padding: '20px 16px calc(20px + env(safe-area-inset-bottom))' }"
-    >
-      <div class="mastery-pick">
-        <div class="mastery-pick__title">标记掌握程度</div>
-        <div class="mastery-pick__grid">
-          <button
-            v-for="(label, level) in MASTERY_LABELS"
-            :key="level"
-            class="mastery-btn"
-            :class="{ 'is-active': libItem?.mastery === level }"
-            :style="{ '--mc': `var(--cy-mastery-${level})` }"
-            @click="setMastery(level as MasteryLevel)"
-          >
-            {{ label }}
-          </button>
-        </div>
-      </div>
-    </van-popup>
+    <MasteryPicker
+      :show="masteryPickOpen"
+      :current="libItem?.mastery ?? 0"
+      @update:show="(v: boolean) => (masteryPickOpen = v)"
+      @confirm="setMastery"
+    />
   </div>
 </template>
 
@@ -455,36 +440,5 @@ function gotoWord(w: string) {
   font-size: var(--cy-font-xs);
   color: var(--cy-text-tertiary);
   padding: 8px 0 4px;
-}
-
-/* 掌握程度弹层 */
-.mastery-pick__title {
-  font-size: var(--cy-font-md);
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 14px;
-}
-
-.mastery-pick__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.mastery-btn {
-  padding: 12px 0;
-  border: 1.5px solid var(--cy-border);
-  background: var(--cy-card);
-  border-radius: var(--cy-radius-md);
-  font-size: var(--cy-font-md);
-  color: var(--cy-text-secondary);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.mastery-btn.is-active {
-  border-color: var(--mc, var(--cy-primary));
-  color: var(--mc, var(--cy-primary));
-  background: var(--cy-primary-soft);
-  font-weight: 600;
 }
 </style>
