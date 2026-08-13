@@ -51,6 +51,7 @@ const refreshNow = () => window.location.reload()
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding-top: var(--cy-safe-top); /* 顶部避让状态栏/摄像头 */
 }
 
 .app-main {
@@ -60,7 +61,7 @@ const refreshNow = () => window.location.reload()
 
 .update-banner {
   position: fixed;
-  top: 0;
+  top: var(--cy-safe-top);
   left: 0;
   right: 0;
   z-index: 3000;

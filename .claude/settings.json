@@ -37,7 +37,26 @@
       "Bash(/usr/bin/grep -o 'registerSW[^;]\\\\{0,200\\\\}' dist-pages/assets/index-*.js)",
       "Bash(/usr/bin/grep -o 'createHandlerBoundToURL\\([^\\)]*\\)\\\\|\"navigation\"[^}]*}\\\\|navigateFallback[^,]*' dist-pages/sw.js)",
       "Bash(/usr/bin/grep -o 'registerRoute\\([^\\)]*navigation[^\\)]*\\)' dist-pages/sw.js)",
-      "Bash(/usr/bin/grep -o 'createHandlerBoundToURL\\([^\\)]*\\)\\\\|setCatchHandler\\([^\\)]*\\)\\\\|isNavigation\\\\|\"navigation\"[^}]*}' dist-pages/sw.js)"
+      "Bash(/usr/bin/grep -o 'createHandlerBoundToURL\\([^\\)]*\\)\\\\|setCatchHandler\\([^\\)]*\\)\\\\|isNavigation\\\\|\"navigation\"[^}]*}' dist-pages/sw.js)",
+      "Bash(/usr/bin/ls -la /c/Users/86131/AppData/Local/Temp/apk-dl/chengyu-apk/app-debug.apk)",
+      "Bash(/usr/bin/cp /c/Users/86131/AppData/Local/Temp/apk-dl/chengyu-apk/app-debug.apk \"/c/Users/86131/Desktop/成语学习.apk\")",
+      "Bash(/usr/bin/ls -la \"/c/Users/86131/Desktop/成语学习.apk\")",
+      "Bash(/usr/bin/grep -o 'edgeToEdge[^:]*:\\\\s*[a-z]*' node_modules/@capacitor/cli/dist/declarations.js)",
+      "Bash(/usr/bin/grep -rno 'edgeToEdgeEnabled' node_modules/@capacitor/cli/dist/)",
+      "Bash(/usr/bin/grep -rln 'edgeToEdge' node_modules/@capacitor/cli/dist/)",
+      "Bash(/usr/bin/grep -rno 'AndroidConfig = [^;]*' node_modules/@capacitor/cli/dist/)",
+      "Bash(/usr/bin/grep -rno 'statusBar\\\\??:' node_modules/@capacitor/cli/dist/definitions.d.ts)",
+      "Bash(/usr/bin/cat android/app/src/main/res/values/styles.xml)",
+      "Bash(/usr/bin/head -30)",
+      "Bash(/usr/bin/ls android/app/src/main/res/values*/)",
+      "Bash(/usr/bin/grep -n 'targetSdk\\\\|compileSdk\\\\|minSdk' android/variables.gradle android/app/build.gradle)",
+      "Bash(/usr/bin/grep -o 'safe-area-inset-top\\\\|van-nav-bar--safe-area-inset-top[^\"]*' node_modules/vant/es/nav-bar/NavBar.mjs node_modules/vant/es/nav-bar/index.css)",
+      "Bash(/usr/bin/head -4)",
+      "Bash(/usr/bin/grep -o 'safeAreaInsetTop[^,}]*\\\\|props:{[^}]*}' node_modules/vant/es/nav-bar/NavBar.mjs)",
+      "Bash(/usr/bin/grep -o 'van-nav-bar--safe-area-inset-top[^\"]*\\\\|class:[^,]*' node_modules/vant/es/nav-bar/NavBar.mjs)",
+      "Bash(/usr/bin/grep -o 'safe-area[^\"\\\\x27]*\\\\|createBEM[^\\)]*\\\\|bem\\([^\\)]*\\)' node_modules/vant/es/nav-bar/NavBar.mjs)",
+      "Bash(/usr/bin/grep -o 'safe-area-[a-z-]*' node_modules/vant/es/nav-bar/NavBar.mjs)",
+      "Bash(/usr/bin/grep -o 'van-nav-bar--safe-area-[a-z-]*' node_modules/vant/es/nav-bar/index.css)"
     ]
   }
 }

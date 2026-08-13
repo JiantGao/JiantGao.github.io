@@ -1,4 +1,8 @@
 :root {
+  /* 安全区（刘海屏/挖孔屏顶部避让；桌面与普通浏览器为 0，无副作用） */
+  --cy-safe-top: env(safe-area-inset-top, 0px);
+  --cy-safe-bottom: env(safe-area-inset-bottom, 0px);
+
   /* 主题色（朱砂红，契合汉字/印章意象） */
   --cy-primary: #c62828;
   --cy-primary-light: #ef5350;
@@ -70,4 +74,9 @@
 .page-body--no-pad {
   padding: 0;
   padding-bottom: calc(50px + env(safe-area-inset-bottom));
+}
+
+/* 顶部固定栏避让状态栏/摄像头（Vant NavBar 的 safe-area prop 在 4.9 存在类名不一致，用全局规则兜底） */
+.van-nav-bar--fixed {
+  padding-top: var(--cy-safe-top);
 }
