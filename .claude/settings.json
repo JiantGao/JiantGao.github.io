@@ -66,7 +66,14 @@
       "Bash(/usr/bin/grep -B2 -A8 'StatusBarInfo' node_modules/@capacitor/status-bar/dist/esm/definitions.d.ts)",
       "Bash(/usr/bin/head -25)",
       "Bash(/usr/bin/grep -A30 'export interface StatusBarInfo' node_modules/@capacitor/status-bar/dist/esm/definitions.d.ts)",
-      "Bash(/usr/bin/head -32)"
+      "Bash(/usr/bin/head -32)",
+      "Bash(/usr/bin/ls node_modules/@capacitor/status-bar/android/src/main/java/com/getcapacitor/plugin/statusbar/)",
+      "Bash(/usr/bin/grep -rn 'height\\\\|getStatusBarHeight\\\\|StatusBarHeight' node_modules/@capacitor/status-bar/android/src/main/java/com/getcapacitor/plugin/statusbar/StatusBar.java)",
+      "Bash(/usr/bin/grep -rn 'androidx.core\\\\|androidx-appcompat\\\\|androidx' android/app/build.gradle android/build.gradle android/variables.gradle)",
+      "Bash(/usr/bin/grep -rln 'androidx.core' node_modules/@capacitor/android/capacitor/build.gradle)",
+      "Bash(/usr/bin/grep -o 'androidx.core:core[a-z0-9:.]*' node_modules/@capacitor/android/capacitor/build.gradle)",
+      "Bash(/usr/bin/grep -n 'setDecorFitsSystemWindows\\\\|onCreate\\\\|onResume\\\\|onStart\\\\|onPostCreate\\\\|protected void\\\\|public void\\\\|final' node_modules/@capacitor/android/capacitor/src/main/java/com/getcapacitor/BridgeActivity.java)",
+      "Bash(/usr/bin/grep -rn 'setDecorFitsSystemWindows\\\\|edgeToEdge\\\\|setStatusBar\\\\|statusBarColor\\\\|transparentStatusBar' node_modules/@capacitor/android/capacitor/src/main/java/com/getcapacitor/BridgeActivity.java node_modules/@capacitor/android/capacitor/src/main/java/com/getcapacitor/)"
     ]
   }
 }

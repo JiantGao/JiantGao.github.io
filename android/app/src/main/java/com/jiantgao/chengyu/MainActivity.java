@@ -1,31 +1,35 @@
 package com.jiantgao.chengyu;
 
 import android.os.Bundle;
-
-import androidx.core.view.WindowCompat;
+import android.view.View;
 
 import com.getcapacitor.BridgeActivity;
 
 /**
- * 应用内容不绘制到状态栏/挖孔摄像头下方。
- * Capacitor 8 默认 edge-to-edge，WebView 会顶到屏幕顶部被摄像头遮挡；
- * 这里在 onCreate 与 onResume 强制 setDecorFitsSystemWindows(true)，
- * 让内容从状态栏下方开始（标准 Android 做法，覆盖 Capacitor 的 edge-to-edge）。
+ * Android 15/16 强制 edge-to-edge，会忽略 setDecorFitsSystemWindows / windowOptOutEdgeToEdgeEnforcement。
+ * 因此这里直接读取状态栏高度（含挖孔摄像头区域），把 WebView 整体向下垫高，
+ * 让内容物理上从摄像头下方开始——不依赖任何系统开关，任何设备都生效。
  */
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fitSystemWindows();
+        final View webView = getBridge().getWebView();
+        webView.post(() -> {
+            int top = statusBarHeight();
+            if (top > 0) {
+                webView.setPadding(0, top, 0, 0);
+            }
+        });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        fitSystemWindows();
-    }
-
-    private void fitSystemWindows() {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+    /** 状态栏高度（像素）；挖孔/刘海屏的 status_bar_height 已包含摄像头区域 */
+    private int statusBarHeight() {
+        int res = 0;
+        int id = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (id > 0) {
+            res = getResources().getDimensionPixelSize(id);
+        }
+        return res;
     }
 }

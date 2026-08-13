@@ -13,11 +13,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
-        <!-- 退出 edge-to-edge 强制：应用内容不绘制到状态栏/摄像头下方 -->
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
-        <!-- 状态栏不透明，使用应用底色，深色图标 -->
-        <item name="android:statusBarColor">#f7f7f5</item>
-        <item name="android:windowLightStatusBar">true</item>
     </style>
 
 
