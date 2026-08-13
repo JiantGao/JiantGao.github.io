@@ -7,6 +7,13 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: false,
   },
+  plugins: {
+    StatusBar: {
+      // 原生确保 WebView 不绘制到状态栏/摄像头下方（配合主题 edge-to-edge 退出）
+      overlaysWebView: false,
+      style: 'LIGHT',
+    },
+  },
 }
 
 export default config

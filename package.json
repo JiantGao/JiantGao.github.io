@@ -22,6 +22,7 @@
     "@capacitor/android": "^8.5.0",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0",
+    "@capacitor/status-bar": "^8.0.3",
     "dexie": "^4.0.11",
     "pinia": "^3.0.2",
     "vant": "^4.9.20",
