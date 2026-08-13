@@ -11,6 +11,7 @@ const search = useSearchStore()
 
 const composing = ref(false)
 const searchWrapRef = ref<HTMLElement>()
+const appVersion = __APP_VERSION__
 
 onMounted(() => {
   // IME 组合输入门控：直接监听底层 input 的 composition 事件
@@ -98,6 +99,7 @@ function onSearchClear() {
     <div v-else class="home__empty">
       <div class="home__empty-mark">成</div>
       <p class="home__empty-hint">输入汉字、拼音或首字母简拼，搜索并自动加入学习库</p>
+      <p class="home__empty-ver">v{{ appVersion }}</p>
     </div>
   </div>
 </template>
@@ -149,6 +151,13 @@ function onSearchClear() {
   color: var(--cy-text-tertiary);
   text-align: center;
   line-height: 1.7;
+}
+
+.home__empty-ver {
+  margin-top: 8px;
+  font-size: var(--cy-font-xs);
+  color: var(--cy-text-tertiary);
+  opacity: 0.6;
 }
 
 /* 结果列表 */
