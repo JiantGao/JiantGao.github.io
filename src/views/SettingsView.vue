@@ -18,6 +18,7 @@ const fileInput = ref<HTMLInputElement>()
 const meta = ref<{ version: string; total: number; curatedCount: number } | null>(null)
 const installable = ref(false)
 const importing = ref(false)
+const appVersion = __APP_VERSION__
 
 onMounted(() => {
   installable.value = canInstall()
@@ -123,7 +124,7 @@ async function onInstall() {
     </van-cell-group>
 
     <van-cell-group inset title="关于">
-      <van-cell title="应用" value="成语学习 · 离线 PWA" />
+      <van-cell title="应用" :value="`成语学习 · v${appVersion}`" />
       <van-cell title="数据版本" :value="meta?.version ?? '…'" />
       <van-cell title="词典规模" :value="meta ? `${meta.total.toLocaleString()} 条成语` : '…'" />
       <van-cell title="精选精编" :value="meta ? `${meta.curatedCount} 条` : '…'" />

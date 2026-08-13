@@ -56,7 +56,17 @@
       "Bash(/usr/bin/grep -o 'van-nav-bar--safe-area-inset-top[^\"]*\\\\|class:[^,]*' node_modules/vant/es/nav-bar/NavBar.mjs)",
       "Bash(/usr/bin/grep -o 'safe-area[^\"\\\\x27]*\\\\|createBEM[^\\)]*\\\\|bem\\([^\\)]*\\)' node_modules/vant/es/nav-bar/NavBar.mjs)",
       "Bash(/usr/bin/grep -o 'safe-area-[a-z-]*' node_modules/vant/es/nav-bar/NavBar.mjs)",
-      "Bash(/usr/bin/grep -o 'van-nav-bar--safe-area-[a-z-]*' node_modules/vant/es/nav-bar/index.css)"
+      "Bash(/usr/bin/grep -o 'van-nav-bar--safe-area-[a-z-]*' node_modules/vant/es/nav-bar/index.css)",
+      "Bash(/usr/bin/find /c/Users/86131/AppData/Local/Temp/apk-dl2 -type f -name \"*.apk\")",
+      "Bash(/usr/bin/cp /c/Users/86131/AppData/Local/Temp/apk-dl2/app-debug.apk \"/c/Users/86131/Desktop/成语学习.apk\")",
+      "Bash(/usr/bin/awk '{print $5\" bytes\"}')",
+      "Bash(/usr/bin/grep -B2 -A6 'overlaysWebView' node_modules/@capacitor/status-bar/dist/esm/definitions.d.ts)",
+      "Bash(/usr/bin/grep -o 'AndroidConfig = {[^;]*' node_modules/@capacitor/cli/dist/index.d.ts)",
+      "Bash(/usr/bin/grep -rno \"edgeToEdge\\\\|statusBarPadding\\\\|overlaysWebView\\\\|windowInsets\\\\|paddingTop\" node_modules/@capacitor/cli/dist/)",
+      "Bash(/usr/bin/grep -B2 -A8 'StatusBarInfo' node_modules/@capacitor/status-bar/dist/esm/definitions.d.ts)",
+      "Bash(/usr/bin/head -25)",
+      "Bash(/usr/bin/grep -A30 'export interface StatusBarInfo' node_modules/@capacitor/status-bar/dist/esm/definitions.d.ts)",
+      "Bash(/usr/bin/head -32)"
     ]
   }
 }

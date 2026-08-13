@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { applySafeAreaTop } from '@/modules/safearea'
 
 const route = useRoute()
 const showRefresh = ref(false)
+
+onMounted(() => {
+  // 原生端校准顶部安全区（读取状态栏真实高度，规避 env() 取不到值）
+  void applySafeAreaTop()
+})
 
 window.addEventListener('sw-need-refresh', () => {
   showRefresh.value = true

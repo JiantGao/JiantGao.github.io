@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
+import pkg from './package.json'
 import vue from '@vitejs/plugin-vue'
 import Components from 'unplugin-vue-components/vite'
 import { VantResolver } from '@vant/auto-import-resolver'
@@ -10,6 +11,9 @@ const base = process.env.BASE_PATH || '/'
 
 export default defineConfig({
   base,
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

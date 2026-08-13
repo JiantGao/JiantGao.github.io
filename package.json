@@ -1,7 +1,7 @@
 {
   "name": "chengyu-app",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "description": "成语学习移动应用（离线 PWA）：基于搜索行为构建个性化成语学习库",
   "scripts": {
