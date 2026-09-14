@@ -1,13 +1,19 @@
 {
-  "_说明": "精编数据模板。复制为 curated-00N.json 后填写。tier 1-5（1最常用）。tier1 需 examples≥3。word 必须存在于全量词典中。",
+  "_说明": "精编数据模板。复制为 curated-00N.json 后填写。tier 1-5（1最常用）。tier1 需 examples≥3。word 必须存在于全量词典中。新字段：sentiment(褒贬义)、usage(使用对象/语境)、charMeanings(逐字释义，char 拼接必须等于 word)。例句应为现代白话，避免古文。",
   "items": [
     {
       "word": "成语",
       "tier": 1,
+      "sentiment": "褒义",
+      "usage": "多用于具体领域、实务语境，如经营、学习、工作方法；常用作谓语、定语、状语。",
+      "charMeanings": [
+        { "char": "成", "meaning": "既成，现成的" },
+        { "char": "语", "meaning": "短句，话语" }
+      ],
       "examples": [
-        "例句一（语境1）",
-        "例句二（语境2）",
-        "例句三（语境3）"
+        "例句一（现代语境1）",
+        "例句二（现代语境2）",
+        "例句三（现代语境3）"
       ],
       "synonyms": ["近义词1"],
       "antonyms": ["反义词1"],

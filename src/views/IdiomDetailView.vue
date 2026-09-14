@@ -24,19 +24,36 @@ const loading = ref(true)
 const notFound = ref(false)
 const libItem = ref<LibraryItem | null>(null)
 const masteryPickOpen = ref(false)
+/** 典故·古文例句折叠状态（默认收起） */
+const classicOpen = ref([] as string[])
 
 const word = computed(() => (route.params.word as string) || '')
 const syllables = computed(() => (idiom.value?.pinyin ?? '').trim().split(/\s+/).filter(Boolean))
 
-const examples = computed<string[]>(() => {
-  const c = idiom.value?.curated
-  if (c?.examples?.length) return c.examples
-  if (idiom.value?.example) return [idiom.value.example]
-  return []
-})
+const examples = computed<string[]>(() => idiom.value?.curated?.examples ?? [])
 const synonyms = computed(() => idiom.value?.curated?.synonyms ?? [])
 const antonyms = computed(() => idiom.value?.curated?.antonyms ?? [])
+const charMeanings = computed(() => idiom.value?.curated?.charMeanings ?? [])
+const sentiment = computed(() => idiom.value?.curated?.sentiment ?? '')
+const usage = computed(() => idiom.value?.curated?.usage ?? '')
+const notes = computed(() => idiom.value?.curated?.notes ?? '')
 const tags = computed(() => idiom.value?.tags ?? [])
+/** 是否存在古文出处或古文例句（用于「典故出处」折叠区） */
+const hasClassic = computed(() => !!(idiom.value?.derivation || idiom.value?.example))
+/** 情感色彩样式类：褒义→success，贬义→danger，中性→info，多含贬义/亦褒亦贬→warning */
+const sentimentClass = computed(() => {
+  switch (sentiment.value) {
+    case '褒义':
+      return 'is-pos'
+    case '贬义':
+    case '多含贬义':
+      return 'is-neg'
+    case '亦褒亦贬':
+      return 'is-mixed'
+    default:
+      return 'is-neutral'
+  }
+})
 
 watch(
   () => route.params.word,
@@ -132,34 +149,51 @@ function gotoWord(w: string) {
         <div v-if="idiom.hot > 0" class="header__badge">精选</div>
       </header>
 
+      <!-- 情感色彩（褒贬义） -->
+      <section v-if="sentiment" class="card">
+        <h3 class="card__title">情感色彩</h3>
+        <span class="sentiment-chip" :class="sentimentClass">{{ sentiment }}</span>
+      </section>
+
       <!-- 释义 -->
       <section class="card">
         <h3 class="card__title">释义</h3>
         <p class="card__text">{{ idiom.explanation }}</p>
-        <div v-if="idiom.curated?.notes" class="card__notes">
+        <div v-if="notes" class="card__notes">
           <span class="card__notes-label">引申义</span>
-          <p>{{ idiom.curated.notes }}</p>
+          <p>{{ notes }}</p>
         </div>
       </section>
 
-      <!-- 出处典故 -->
-      <section v-if="idiom.derivation" class="card">
-        <h3 class="card__title">出处 · 典故</h3>
-        <p class="card__text">{{ idiom.derivation }}</p>
+      <!-- 逐字释义 -->
+      <section v-if="charMeanings.length" class="card">
+        <h3 class="card__title">逐字释义</h3>
+        <div class="char-meanings">
+          <div v-for="cm in charMeanings" :key="cm.char" class="char-cell">
+            <div class="char-cell__char">
+              {{ cm.char }}
+              <span v-if="cm.pinyin" class="char-cell__pin">{{ cm.pinyin }}</span>
+            </div>
+            <div class="char-cell__meaning">{{ cm.meaning }}</div>
+          </div>
+        </div>
       </section>
 
-      <!-- 例句 -->
-      <section class="card">
+      <!-- 使用对象 -->
+      <section v-if="usage" class="card">
+        <h3 class="card__title">使用对象</h3>
+        <p class="card__text">{{ usage }}</p>
+      </section>
+
+      <!-- 实用例句（现代） -->
+      <section v-if="examples.length" class="card">
         <h3 class="card__title">实用例句</h3>
-        <template v-if="examples.length">
-          <ol class="example-list">
-            <li v-for="(ex, i) in examples" :key="i" class="example-item">
-              <span class="example-item__no">{{ i + 1 }}</span>
-              <span class="example-item__text">{{ ex }}</span>
-            </li>
-          </ol>
-        </template>
-        <van-empty v-else image="search" description="暂无例句，可添加笔记记录用法" />
+        <ol class="example-list">
+          <li v-for="(ex, i) in examples" :key="i" class="example-item">
+            <span class="example-item__no">{{ i + 1 }}</span>
+            <span class="example-item__text">{{ ex }}</span>
+          </li>
+        </ol>
       </section>
 
       <!-- 近义词 / 反义词 -->
@@ -192,6 +226,19 @@ function gotoWord(w: string) {
       <section v-if="idiom.curated?.misuse" class="card card--warn">
         <h3 class="card__title">常见误用</h3>
         <p class="card__text">{{ idiom.curated.misuse }}</p>
+      </section>
+
+      <!-- 典故 · 古文例句（折叠收起） -->
+      <section v-if="hasClassic" class="card">
+        <van-collapse v-model="classicOpen">
+          <van-collapse-item title="出处 · 典故（古文，可展开）" :name="'classic'">
+            <p v-if="idiom.derivation" class="card__text">{{ idiom.derivation }}</p>
+            <p v-if="idiom.example" class="classic-example">
+              <span class="classic-example__label">古文例句</span>{{ idiom.example }}
+            </p>
+            <p v-if="!idiom.derivation && !idiom.example" class="card__text">暂无</p>
+          </van-collapse-item>
+        </van-collapse>
       </section>
 
       <!-- 标签 -->
@@ -351,6 +398,81 @@ function gotoWord(w: string) {
 
 .card--warn {
   border-left: 4px solid var(--cy-warning);
+}
+
+/* 情感色彩 */
+.sentiment-chip {
+  display: inline-block;
+  padding: 5px 16px;
+  border-radius: 999px;
+  font-size: var(--cy-font-md);
+  font-weight: 600;
+}
+.sentiment-chip.is-pos {
+  background: #e8f5e9;
+  color: var(--cy-success);
+}
+.sentiment-chip.is-neg {
+  background: #fdecea;
+  color: var(--cy-danger, #ee0a24);
+}
+.sentiment-chip.is-mixed {
+  background: #fff7e6;
+  color: var(--cy-warning);
+}
+.sentiment-chip.is-neutral {
+  background: var(--cy-bg);
+  color: var(--cy-text-secondary);
+}
+
+/* 逐字释义 */
+.char-meanings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.char-cell {
+  flex: 1 1 calc(50% - 10px);
+  min-width: 120px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--cy-bg);
+  border-radius: var(--cy-radius-sm);
+}
+.char-cell__char {
+  flex-shrink: 0;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', serif;
+  color: var(--cy-primary);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.char-cell__pin {
+  font-size: var(--cy-font-xs);
+  font-weight: 400;
+  color: var(--cy-text-tertiary);
+}
+.char-cell__meaning {
+  font-size: var(--cy-font-sm);
+  line-height: 1.5;
+  color: var(--cy-text-secondary);
+}
+
+/* 典故 · 古文例句 */
+.classic-example {
+  margin-top: 10px;
+  font-size: var(--cy-font-sm);
+  line-height: 1.7;
+  color: var(--cy-text-secondary);
+}
+.classic-example__label {
+  color: var(--cy-text-tertiary);
+  margin-right: 6px;
 }
 
 /* 例句 */

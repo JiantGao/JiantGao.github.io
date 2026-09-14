@@ -28,11 +28,30 @@ export interface Idiom {
   curated?: CuratedInfo
 }
 
+/** 情感色彩（褒贬义） */
+export type Sentiment = '褒义' | '贬义' | '中性' | '亦褒亦贬' | '多含贬义'
+
+/** 逐字释义：单个字及其含义 */
+export interface CharMeaning {
+  /** 字，如「守」 */
+  char: string
+  /** 该字在成语中的含义，如「看守，守着」 */
+  meaning: string
+  /** 该字在成语中的读音（仅当为多音字且需特别标注时提供，可选） */
+  pinyin?: string
+}
+
 /** 精编数据：核心常用成语的深度内容 */
 export interface CuratedInfo {
   /** 常用度档位 1-5 */
   tier: number
-  /** 多个不同语境的例句（至少3条） */
+  /** 情感色彩（褒贬义） */
+  sentiment: string
+  /** 使用对象 / 适用语境：适用的主体、对象、场景与句法位置 */
+  usage: string
+  /** 逐字释义 */
+  charMeanings: CharMeaning[]
+  /** 多个不同语境的例句（至少3条，现代白话） */
   examples: string[]
   /** 近义词 */
   synonyms: string[]

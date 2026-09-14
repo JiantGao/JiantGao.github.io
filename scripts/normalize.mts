@@ -28,6 +28,9 @@ export interface NormalizedIdiom {
   hot: number
   curated?: {
     tier: number
+    sentiment: string
+    usage: string
+    charMeanings: Array<{ char: string; meaning: string; pinyin?: string }>
     examples: string[]
     synonyms: string[]
     antonyms: string[]
