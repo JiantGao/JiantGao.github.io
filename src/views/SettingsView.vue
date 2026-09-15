@@ -28,7 +28,7 @@ onMounted(() => {
 async function onExport() {
   try {
     const payload = await exportAll()
-    downloadJSON(payload, backupFilename())
+    await downloadJSON(payload, backupFilename())
     showSuccessToast('已导出备份文件')
   } catch (e) {
     showToast('导出失败')

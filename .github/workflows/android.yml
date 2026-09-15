@@ -35,7 +35,17 @@ jobs:
         working-directory: android
         run: |
           chmod +x gradlew
+          # 若已配置固定签名密钥（GitHub Secrets），解码写入 keystore，构建出可覆盖升级的稳定签名包
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 --decode > app/build/release-key.jks
+            echo "已使用固定签名密钥"
+          fi
           ./gradlew assembleDebug
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4

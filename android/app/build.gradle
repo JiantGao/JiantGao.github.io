@@ -1,8 +1,21 @@
 apply plugin: 'com.android.application'
 
+// 由 CI（GitHub Secrets -> 环境变量）注入固定签名密钥；未配置时回退到默认 debug 签名，保证本地/未设密钥也能构建
+def hasFixedSign = System.getenv('KEYSTORE_BASE64') != null && System.getenv('KEYSTORE_PASSWORD') != null
+
 android {
     namespace = "com.jiantgao.chengyu"
     compileSdk = rootProject.ext.compileSdkVersion
+    signingConfigs {
+        if (hasFixedSign) {
+            release {
+                storeFile file("${project.buildDir}/release-key.jks")
+                storePassword System.getenv('KEYSTORE_PASSWORD')
+                keyAlias(System.getenv('KEY_ALIAS') ?: 'chengyu')
+                keyPassword(System.getenv('KEY_PASSWORD') ?: System.getenv('KEYSTORE_PASSWORD'))
+            }
+        }
+    }
     defaultConfig {
         applicationId "com.jiantgao.chengyu"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -17,9 +30,13 @@ android {
         }
     }
     buildTypes {
+        if (hasFixedSign) {
+            debug { signingConfig = signingConfigs.release }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasFixedSign) signingConfig = signingConfigs.release
         }
     }
 }

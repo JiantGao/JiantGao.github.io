@@ -6,6 +6,9 @@ node_modules/
 dist/
 dist-ssr/
 dist-pages/
+
+# 签名密钥（个人 keystore 与密码，切勿提交）
+.keys/
 *.local
 
 # Capacitor / Android 构建产物（源码 android/ 保留，构建输出忽略）
